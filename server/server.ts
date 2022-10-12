@@ -14,6 +14,12 @@ function emitUpdatedCardsForPlayers(cards: Card[], newGame = false) {
     if (newGame) {
       updatedCardsFromPlayerPerspective = updatedCardsFromPlayerPerspective.filter(card => card.locationType !== "unused")
     }
+    // if (updatedCardsFromPlayerPerspective.length === 2) {
+    //   gameState.playerWithOnlyTwoCards.push(gameState.playerNames[i])
+    // }
+    // if (updatedCardsFromPlayerPerspective.length !== 2) {
+    //   gameState.playerWithOnlyTwoCards.filter(playerName => playerName !== gameState.playerNames[i])
+    // }
     console.log("emitting update for player", i, ":", updatedCardsFromPlayerPerspective)
     io.to(String(i)).emit(
       newGame ? "all-cards" : "updated-cards", 
@@ -29,6 +35,7 @@ io.on('connection', client => { // connection (new browser want to join)
       gameState.currentTurnPlayerIndex,
       gameState.phase,
       gameState.playCount,
+      gameState.playerWithOnlyTwoCards,
     )
   }
   
@@ -68,6 +75,7 @@ io.on('connection', client => { // connection (new browser want to join)
       gameState.currentTurnPlayerIndex,
       gameState.phase,
       gameState.playCount,
+      gameState.playerWithOnlyTwoCards,
     )
   })
 

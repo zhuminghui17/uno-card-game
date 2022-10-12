@@ -20,7 +20,7 @@ export interface Card {
  * determines whether one can play a card given the last card played
  */
 export function areCompatible(card: Card, lastCardPlayed: Card) {
-  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit
+  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit || card.rank === "K" || || lastCardPlayed.rank === "K"// make king wild
 }
 
 export type GamePhase = "initial-card-dealing" | "play" | "game-over"
@@ -31,6 +31,7 @@ export interface GameState {
   currentTurnPlayerIndex: number
   phase: GamePhase
   playCount: number
+  playerWithOnlyTwoCards: string[] // include this feature
 }
 
 /**
@@ -100,6 +101,7 @@ export function getLastPlayedCard(cardsById: Record<CardId, Card>) {
     currentTurnPlayerIndex: 0,
     phase: "initial-card-dealing",
     playCount: 0,
+    playerWithOnlyTwoCards: []
   }
 }
 

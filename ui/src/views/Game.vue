@@ -2,7 +2,8 @@
   <div>
     <b-button class="mx-2 my-2" size="sm" @click="socket.emit('new-game')">New Game</b-button>
     <b-badge class="mr-2 mb-2" :variant="myTurn ? 'primary' : 'secondary'">turn: {{ currentTurnPlayerIndex }}</b-badge>
-    <b-badge class="mr-2 mb-2">{{ phase }}</b-badge>        
+    <b-badge class="mr-2 mb-2">{{ phase }}</b-badge>  
+    <b-button class="mx-2 my-2" size="sm">Player0CardNumber: {{playerWithOnlyTwoCards}}</b-button>      
     <div
       v-for="card in cards"
       :key="card.id"
@@ -40,6 +41,7 @@ const cards: Ref<Card[]> = ref([])
 const currentTurnPlayerIndex = ref(-1)
 const phase = ref("")
 const playCount = ref(-1)
+const playerWithOnlyTwoCards: Ref<string[]> = ref([])
 
 const myTurn = computed(() => currentTurnPlayerIndex.value === playerIndex && phase.value !== "game-over")
 
@@ -51,10 +53,11 @@ socket.on("updated-cards", (updatedCards: Card[]) => {
   applyUpdatedCards(updatedCards)
 })
 
-socket.on("game-state", (newCurrentTurnPlayerIndex: number, newPhase: GamePhase, newPlayCount: number) => {
+socket.on("game-state", (newCurrentTurnPlayerIndex: number, newPhase: GamePhase, newPlayCount: number, newPlayerWithOnlyTwoCards: string[]) => {
   currentTurnPlayerIndex.value = newCurrentTurnPlayerIndex
   phase.value = newPhase
   playCount.value = newPlayCount
+  playerWithOnlyTwoCards.value = newPlayerWithOnlyTwoCards
 })
 
 function doAction(action: Action) {
