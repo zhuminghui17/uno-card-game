@@ -2,15 +2,15 @@
   <div>
     <b-button class="mx-2 my-2" size="sm" @click="socket.emit('new-game')">New Game</b-button>
     <b-badge class="mr-2 mb-2" :variant="myTurn ? 'primary' : 'secondary'">turn: {{ currentTurnPlayerIndex }}</b-badge>
-    <b-badge class="mr-2 mb-2">{{ phase }}</b-badge>
+    <b-badge class="mr-2 mb-2">{{ phase }}</b-badge>        
     <div
       v-for="card in cards"
       :key="card.id"
-      @click="playCard(card.id)"
+      @click="playCard(card.id)" 
     >
-      <pre>{{ formatCard(card, true) }}</pre>
+      <AnimatedCard :card = card />
     </div>
-    <b-button class="mx-2 my-2" size="sm" @click="drawCard" :disabled="!myTurn">Draw Card</b-button>
+    <b-button class="mx-2 my-2" size="sm" @click="drawCard" :disabled="!myTurn">Draw Card</b-button> 
   </div>
 </template>
 
@@ -18,6 +18,7 @@
 import { computed, onMounted, ref, Ref } from 'vue'
 import { io } from "socket.io-client"
 import { Card, GamePhase, Action, formatCard, CardId } from "../../../server/model"
+import AnimatedCard from '@/ components/AnimatedCard.vue'; // already import
 
 // props
 interface Props {

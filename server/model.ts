@@ -27,7 +27,7 @@ export type GamePhase = "initial-card-dealing" | "play" | "game-over"
 
 export interface GameState {
   playerNames: string[]
-  cardsById: Record<CardId, Card>
+  cardsById: Record<CardId, Card> 
   currentTurnPlayerIndex: number
   phase: GamePhase
   playCount: number
@@ -57,7 +57,7 @@ export function getLastPlayedCard(cardsById: Record<CardId, Card>) {
  * extracts the cards that are currently in the given player's hand
  */
  export function extractPlayerCards(cardsById: Record<CardId, Card>, playerIndex: number): Card[] {
-  return Object.values(cardsById).filter(({ playerIndex: x }) => x === playerIndex)
+  return Object.values(cardsById).filter(({ playerIndex: x }) => x === playerIndex) // delete a card
 }
 
 /**
