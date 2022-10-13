@@ -20,7 +20,7 @@ export interface Card {
  * determines whether one can play a card given the last card played
  */
 export function areCompatible(card: Card, lastCardPlayed: Card) {
-  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit || card.rank === "K" || || lastCardPlayed.rank === "K"// make king wild
+  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit || card.rank === "K" || lastCardPlayed.rank === "K"// make king wild
 }
 
 export type GamePhase = "initial-card-dealing" | "play" | "game-over"

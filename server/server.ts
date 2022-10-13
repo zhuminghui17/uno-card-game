@@ -6,7 +6,7 @@ const server = http.createServer() // how to create socket.io server
 const io = new Server(server)
 const port = 8091
 
-let gameState = createEmptyGame(["player1", "player2"], 2, 2)
+let gameState = createEmptyGame(["player1", "player2"], 1)
 
 function emitUpdatedCardsForPlayers(cards: Card[], newGame = false) {
   gameState.playerNames.forEach((_, i) => {

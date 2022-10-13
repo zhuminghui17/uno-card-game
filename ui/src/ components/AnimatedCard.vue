@@ -1,29 +1,35 @@
 <template>
-      <b-button class="mx-2 mb-2" :pill = "false"
-                :size = "card.locationType === 'player-hand' ? 'lg' : 'sm'" 
-      :variant = "card.locationType === 'last-card-played' ? 'danger' : 'light'" >{{card.suit + ' ' + card.rank}} </b-button>
+      <b-button class="mx-2 mb-2"
+      size = 'lg'
+      :variant = "card.locationType === 'last-card-played' ? 'danger' : 'light'" 
+      @click="pickCard(card.id)">{{card.suit + ' ' + card.rank}} </b-button>
   </template>
   
   <script setup lang="ts">
   
-  import { Card, GamePhase, Action, formatCard, CardId } from "../../../server/model"
+  import { Card, CardId, areCompatible, getLastPlayedCard} from "../../../server/model"
   
   // props
   interface Props {
     card?: Card
+    // campatible: boolean
   }
   
   // default values for props
   const props = withDefaults(defineProps<Props>(), {
     card: undefined,
+    // compatible: true
   })
 
   // events
-  // const emit = defineEmits<{
-  //   (e: 'change', card: Card): void
-  // }>()
 
-  // function undoRedo(undoRedoIndex: number) {
-  //   emit("change", undoRedoIndex)
-  // }
+  //define a emit called 
+  const emit = defineEmits<{
+    (e:'picked', cardId:CardId):void
+  }>()
+
+  function pickCard(cardId:CardId){
+    // emit the particular event called picked 
+    emit('picked',cardId)
+  }
   </script>
