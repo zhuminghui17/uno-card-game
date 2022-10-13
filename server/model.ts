@@ -20,7 +20,7 @@ export interface Card {
  * determines whether one can play a card given the last card played
  */
 export function areCompatible(card: Card, lastCardPlayed: Card) {
-  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit || card.rank === "K" || lastCardPlayed.rank === "K"// make king wild
+  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit //|| card.rank === "K" || lastCardPlayed.rank === "K"// make king wild
 }
 
 export type GamePhase = "initial-card-dealing" | "play" | "game-over"
@@ -31,7 +31,7 @@ export interface GameState {
   currentTurnPlayerIndex: number
   phase: GamePhase
   playCount: number
-  playerWithOnlyTwoCards: string[] // include this feature
+  playersWithTwoCardsList: number[] // include this feature
 }
 
 /**
@@ -59,6 +59,21 @@ export function getLastPlayedCard(cardsById: Record<CardId, Card>) {
  */
  export function extractPlayerCards(cardsById: Record<CardId, Card>, playerIndex: number): Card[] {
   return Object.values(cardsById).filter(({ playerIndex: x }) => x === playerIndex) // delete a card
+}
+
+/**
+ * finds the player with less than or equal to 2 cards
+ */
+
+ export function playersWithTwoCards(gameState: GameState){
+  const playerCardCounts = computePlayerCardCounts(gameState)
+  const playersWithTwoCardsList:number[] = []
+  for (let i:number = 0; i < playerCardCounts.length; i++ ){
+    if (playerCardCounts[i] <= 2){
+      playersWithTwoCardsList.push(i)
+    }
+  }
+  return playersWithTwoCardsList
 }
 
 /**
@@ -101,7 +116,7 @@ export function getLastPlayedCard(cardsById: Record<CardId, Card>) {
     currentTurnPlayerIndex: 0,
     phase: "initial-card-dealing",
     playCount: 0,
-    playerWithOnlyTwoCards: []
+    playersWithTwoCardsList: []
   }
 }
 
@@ -116,6 +131,7 @@ export function findNextCardToDraw(cardsById: Record<CardId, Card>): CardId | nu
   }
   return unplayedCardIds[Math.floor(Math.random() * unplayedCardIds.length)]
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // player actions
