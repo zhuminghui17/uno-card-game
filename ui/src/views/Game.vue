@@ -3,18 +3,19 @@
     <b-button class="mx-2 my-2" size="sm" @click="socket.emit('new-game')">New Game</b-button>
     <b-badge class="mr-2 mb-2" :variant="myTurn ? 'primary' : 'secondary'">turn: {{ currentTurnPlayerIndex }}</b-badge>
     <b-badge class="mr-2 mb-2">{{ phase }}</b-badge>  
-    <b-button class="mx-2 my-2" size="sm">players with 2 card or less: {{playersWithTwoCardsList.length === 0 ? 'None' : playersWithTwoCardsList}}</b-button>  
+    <b-badge class="mx-2 my-2" variant="success" size="sm">Player Index with 2 Cards or Less: {{playersWithTwoCardsArray}} </b-badge>  
     <div>
       <b-button class="mx-2 my-2" size="sm" variant = 'light' >Card Illustration:</b-button>   
       <b-button class="mx-2 my-2" size="sm" variant = 'danger' >Last Card Played</b-button>       
       <b-button class="mx-2 my-2" size="sm" variant = 'info' >Unused</b-button>   
+      <b-button class="mx-2 my-2" size="sm" variant = 'outline-danger' >Legal to Play</b-button>  
     </div>    
     <div
-      v-for="card in cards"
+      v-for="card in unPlayedCards"
       :key="card.id"
       @click="playCard(card.id)" 
     >
-      <AnimatedCard :card = card :compatible = "compatible(card, lastCard)" @picked = "playCard"  />
+      <AnimatedCard :card = "card" :compatible = "compatible(card, lastCard)" :myTurn="myTurn" @picked = "playCard"  />
     </div>
     <b-button class="mx-2 my-2" size="sm" @click="drawCard" :disabled="!myTurn">Draw Card</b-button> 
   </div>
@@ -48,15 +49,32 @@ const phase = ref("")
 const playCount = ref(-1)
 const playersWithTwoCardsList: Ref<number[]> = ref([])
 
+const unPlayedCards = computed(() => cards.value.filter(card => card.locationType != "unused" )) // for loop
+
 const myTurn = computed(() => currentTurnPlayerIndex.value === playerIndex && phase.value !== "game-over")
 
 const lastCard = computed(() => cards.value.find(card => card.locationType === 'last-card-played'))
 
+const playersWithTwoCardsArray = computed(() => {
+  if (playCount.value < 6) { //consider only two players and dealing 3 cards at the beginning
+    return 'Initial Card Dealing'
+  }
+  else {
+    if (playersWithTwoCardsList.value.length !== 0) {
+      return playersWithTwoCardsList.value
+    } 
+    else {
+      return "None"
+    }
+}
+})
+
 function compatible(card:Card, lastCard:Card|undefined){
   if (typeof lastCard === 'undefined'){
-    return true
+    return false 
   }
-  else {return areCompatible(card,lastCard)}
+  else {
+    return areCompatible(card,lastCard)}
 }
 
 socket.on("all-cards", (allCards: Card[]) => {
@@ -72,6 +90,7 @@ socket.on("game-state", (newCurrentTurnPlayerIndex: number, newPhase: GamePhase,
   phase.value = newPhase
   playCount.value = newPlayCount
   playersWithTwoCardsList.value = newPlayersWithTwoCards
+  console.log(playersWithTwoCardsList.value) // for Q4
 })
 
 function doAction(action: Action) {
