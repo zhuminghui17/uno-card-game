@@ -1,37 +1,35 @@
 <template>
-      <b-button class="mx-2 mb-2"
+  <div :v-if = "!(card.locationType != 'unused')">
+    <b-button class="mx-2 mb-2"
       size = 'lg'
-      :variant = "card.locationType === 'last-card-played' ? 'danger' : card.locationType === 'unused' ? 'info': compatible && card.locationType === 'player-hand' ? 'outline-danger' : 'light' " 
+      :variant = "card.locationType === 'last-card-played' ? 'danger' : card.locationType === 'unused' ? 'info': compatible && myTurn && card.locationType === 'player-hand' ? 'outline-danger' : 'light' " 
       @click="pickCard(card.id)">{{card.suit + ' ' + card.rank}} </b-button> 
+  </div>
   </template>
 
   <script setup lang="ts">
-  // :variant = "card.locationType === 'last-card-played' ? 'danger' : 'light'" 
-  //:variant = "card.locationType === 'last-card-played' ? 'danger' : card.locationType === 'unused' ? 'info': 'light'" 
-  import { Card, CardId, areCompatible, getLastPlayedCard} from "../../../server/model"
-  import {computed} from "vue"
+  import { Card, CardId} from "../../../server/model"
   
   // props
   interface Props {
     card?: Card
     compatible: boolean
+    myTurn: boolean
   }
   
   // default values for props
   const props = withDefaults(defineProps<Props>(), {
     card: undefined,
-    compatible: true
+    compatible: false,
+    myTurn: true
   })
 
   // events
-
-  //define a emit called 
   const emit = defineEmits<{
     (e:'picked', cardId:CardId):void
   }>()
 
   function pickCard(cardId:CardId){
-    // emit the particular event called picked 
     emit('picked',cardId)
   }
   </script>
