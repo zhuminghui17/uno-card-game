@@ -1,7 +1,4 @@
 <template>
-    <!-- Todo:
-    finish the assessibility requirement 
-    -->
     <div class = 'container' style="width: 500px;">
         <b-overlay :show="busy" rounded="sm">
             <b-card
@@ -24,12 +21,12 @@
 
             <b-form-group
             id = 'input-group-rank-limit'
-            label = 'Maximun Number of Rank:'
+            label = 'Maximum Number of Rank:'
             description = 'Please only input numbers'
             >
             <b-form-input
             id = 'input-for-rank-limit'
-            placeholder="maximun number of rank"
+            placeholder="maximum number of rank"
             v-model.number="rankLimit"
             >
             </b-form-input>
