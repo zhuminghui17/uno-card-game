@@ -1,6 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // data model for cards and game state
 
+import { config } from "process"
+
 export const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 export const SUITS = ["♦️", "♥️", "♣️", "♠️"]
 
@@ -20,7 +22,7 @@ export interface Card {
  * determines whether one can play a card given the last card played
  */
 export function areCompatible(card: Card, lastCardPlayed: Card) {
-  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit //|| card.rank === "K" || lastCardPlayed.rank === "K"// make king wild
+  return card.rank === lastCardPlayed.rank || card.suit === lastCardPlayed.suit || card.rank === "K" || lastCardPlayed.rank === "K"// make king wild
 }
 
 export type GamePhase = "initial-card-dealing" | "play" | "game-over"
@@ -31,7 +33,7 @@ export interface GameState {
   currentTurnPlayerIndex: number
   phase: GamePhase
   playCount: number
-  playersWithTwoCardsList: number[] // include this feature
+  playersWithTwoCardsList: number[] // store players with two cards or less
 }
 
 /**
@@ -69,8 +71,8 @@ export function getLastPlayedCard(cardsById: Record<CardId, Card>) {
   const playerCardCounts = computePlayerCardCounts(gameState)
   const playersWithTwoCardsList:number[] = []
   for (let i:number = 0; i < playerCardCounts.length; i++ ){
-    if (playerCardCounts[i] <= 2){
-      playersWithTwoCardsList.push(i)
+    if (playerCardCounts[i] <= 2){ // less than 2 cards
+      playersWithTwoCardsList.push(i) // add the player index
     }
   }
   return playersWithTwoCardsList
@@ -90,7 +92,7 @@ export function getLastPlayedCard(cardsById: Record<CardId, Card>) {
 /**
  * creates an empty GameState in the initial-card-dealing state
  */
- export function createEmptyGame(playerNames: string[], numberOfDecks = 5, rankLimit = Infinity): GameState {
+ export function createEmptyGame(playerNames: string[], numberOfDecks = 1, rankLimit = Infinity): GameState { // deck and rank setting as default in server
   const cardsById: Record<CardId, Card> = {}
   let cardId = 0
 
