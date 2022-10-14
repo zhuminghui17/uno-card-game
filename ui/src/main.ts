@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from '@/App.vue'
 import Game from '@/views/Game.vue'
+import ConfigPage from '@/views/ConfigPage.vue' // import
 
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue"
 
@@ -16,6 +17,10 @@ const router = new VueRouter({
   mode: "history",
   routes: [
     {
+      path:'/config', // config
+      component: ConfigPage
+    },
+    {
       path: "/:playerIndex",
       component: Game,
       props (route) {
@@ -29,6 +34,7 @@ const router = new VueRouter({
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
+
 
 /* eslint-disable no-new */
 new Vue({
