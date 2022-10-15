@@ -18,6 +18,11 @@ export interface Card {
   positionInLocation: number | null
 }
 
+export interface Config{  
+  numOfDeck: number
+  rankLimit: number 
+}
+
 /**
  * determines whether one can play a card given the last card played
  */

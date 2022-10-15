@@ -1,15 +1,11 @@
 import http from "http"
 import { Server } from "socket.io"
-import { Action, createEmptyGame, doAction, filterCardsForPlayerPerspective, playersWithTwoCards, Card  } from "./model"
+import { Config, Action, createEmptyGame, doAction, filterCardsForPlayerPerspective, playersWithTwoCards, Card  } from "./model"
 
 const server = http.createServer() // how to create socket.io server
 const io = new Server(server)
 const port = 8091
 
-export interface Config{  
-  numOfDeck: number
-  rankLimit: number 
-}
 
 let config:Config = { //default config
   numOfDeck:1,
